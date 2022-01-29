@@ -1,13 +1,14 @@
 import React, { Component, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import CardPokemon from '../components/CardPokemon';
 import { ContextProvider } from '../context/BaseContext';
-import { capitalizeFirstLetter } from '../utils/GlobalFunction';
+import { capitalizeFirstLetter, releasePokemon } from '../utils/GlobalFunction';
 import GlobalVar from '../utils/GlobalVar';
 
 export default function DetailPokemon() {
   const context = useContext(ContextProvider)
+  const navigate = useNavigate()
   const { state } = useLocation()
 
   return (
@@ -42,7 +43,7 @@ export default function DetailPokemon() {
           {state.nickname ?
             <button
               className='btn btn-primary'
-              onClick={() =>{} }
+              onClick={() =>{releasePokemon(state, context, context.myPokemon, navigate)} }
               style={{ width: '100%', marginTop: 20, backgroundColor:'firebrick' }}
             >
               Release Pokemon

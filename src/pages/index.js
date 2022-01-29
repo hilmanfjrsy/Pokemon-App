@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import CardPokemon from '../components/CardPokemon';
 import LoadingScreen from '../components/LoadingScreen';
+import { ContextProvider } from '../context/BaseContext';
 import { getRequest } from '../utils/GlobalFunction';
 import GlobalVar from '../utils/GlobalVar';
 
 export default function Home() {
+  const context = useContext(ContextProvider)
   const [listPokemon, setListPokemon] = useState([])
   const [url, setUrl] = useState('https://pokeapi.co/api/v2/pokemon')
   const [nextUrl, setNextUrl] = useState('')
@@ -44,7 +46,7 @@ export default function Home() {
         </div>
         <div className='center'>
           <Link to={'/my-pokemon'} style={{ textDecoration: 'none', color: GlobalVar.secondaryColor }}>
-            <h3 className=''>My Pokemon</h3>
+            <h3 className=''>My Pokemon <span className='badge-primary'>{context.myPokemon.length}</span> </h3>
           </Link>
         </div>
         <div className='container-grid' >
