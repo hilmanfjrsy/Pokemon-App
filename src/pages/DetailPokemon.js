@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import CardPokemon from '../components/CardPokemon';
+import { ContextProvider } from '../context/BaseContext';
 import { capitalizeFirstLetter } from '../utils/GlobalFunction';
+import GlobalVar from '../utils/GlobalVar';
 
 export default function DetailPokemon() {
+  const context = useContext(ContextProvider)
   const { state } = useLocation()
-  console.log(state)
 
   return (
-    <div className='container'>
-      <div className='wrap'>
+    <div className='container' >
+      <div className='container-detail'>
         <div style={{ paddingTop: 30, paddingBottom: 30, flex: 0.4 }}>
           <CardPokemon item={state} isActive={false} >
             <div style={{ marginTop: 15 }} className='text-center card-grey'>
@@ -36,6 +39,23 @@ export default function DetailPokemon() {
               </div>
             </div>
           </CardPokemon>
+          {state.nickname ?
+            <button
+              className='btn btn-primary'
+              onClick={() =>{} }
+              style={{ width: '100%', marginTop: 20, backgroundColor:'firebrick' }}
+            >
+              Release Pokemon
+            </button>
+            :
+            <button
+              className='btn btn-primary'
+              onClick={() => catchPokemon(state)}
+              style={{ width: '100%', marginTop: 20 }}
+            >
+              Catch Pokemon
+            </button>
+          }
         </div>
         <div style={{ paddingTop: 30, paddingBottom: 30, flex: 1 }}>
           <div className='card-container'>
@@ -64,4 +84,102 @@ export default function DetailPokemon() {
       </div>
     </div>
   )
+
+  function catchPokemon(pokemon) {
+    let percentage = Math.random()
+    let probability = 0.50
+
+    let timerInterval
+    Swal.fire({
+      title: `Catch ${capitalizeFirstLetter(pokemon.name)}`,
+      html: 'Will be successful if the percentage is above 50%',
+      timer: 2000,
+      timerProgressBar: true,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading()
+      },
+      willClose: () => {
+        clearInterval(timerInterval)
+      }
+    }).then((result) => {
+      if (result.dismiss === Swal.DismissReason.timer) {
+        if (percentage < probability) {
+          Swal.fire(
+            {
+              title: `Failed to catch ${capitalizeFirstLetter(pokemon.name)}`,
+              text: `Your percentage is ${parseInt(percentage * 100)}%`,
+              icon: 'error',
+              confirmButtonColor: GlobalVar.secondaryColor,
+              confirmButtonText: 'Close',
+              allowOutsideClick: false
+            }
+          )
+        } else {
+          Swal.fire(
+            {
+              title: `Congrats you got ${capitalizeFirstLetter(pokemon.name)}`,
+              text: `With percentage ${parseInt(percentage * 100)}%`,
+              icon: 'success',
+              confirmButtonColor: GlobalVar.secondaryColor,
+              confirmButtonText: 'Give Nickname!',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.isConfirmed) {
+                giveNickname(pokemon)
+              }
+            })
+        }
+      }
+    })
+  }
+
+  function giveNickname(pokemon) {
+    Swal.fire({
+      title: 'Give your pokemon a nickname',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off',
+      },
+      confirmButtonText: 'Save',
+      confirmButtonColor: GlobalVar.secondaryColor,
+      showLoaderOnConfirm: true,
+      allowOutsideClick: false,
+      preConfirm: (nickname) => {
+        return nickname
+      },
+      allowOutsideClick: false
+    }).then((result) => {
+      if (result.isConfirmed) {
+        let checkPokemon = context.myPokemon
+        let find = checkPokemon.find(item => item.nickname.toLowerCase() == result.value.toLowerCase())
+        if (find) {
+          Swal.fire(
+            {
+              title: `Failed`,
+              text: `Pokemon with nickname ${result.value} already exists`,
+              icon: 'error',
+              confirmButtonColor: GlobalVar.secondaryColor,
+              confirmButtonText: 'Change Nickname!',
+              allowOutsideClick: false
+            }).then((result) => {
+              if (result.isConfirmed) {
+                giveNickname(pokemon)
+              }
+            })
+        } else {
+          pokemon.nickname = result.value
+          checkPokemon.push(pokemon)
+          context.setMyPokemon(checkPokemon)
+          localStorage.setItem('myPokemon', JSON.stringify(checkPokemon))
+          Swal.fire({
+            title: `${result.value}`,
+            text: `New pokemon has been added!`,
+            confirmButtonColor: GlobalVar.secondaryColor,
+            imageUrl: pokemon.sprites.front_default
+          })
+        }
+      }
+    })
+  }
 }

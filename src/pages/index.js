@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import CardPokemon from '../components/CardPokemon';
 import LoadingScreen from '../components/LoadingScreen';
 import { getRequest } from '../utils/GlobalFunction';
+import GlobalVar from '../utils/GlobalVar';
 
 export default function Home() {
   const [listPokemon, setListPokemon] = useState([])
@@ -37,10 +39,15 @@ export default function Home() {
   return (
     <div className='container'>
       <div>
-        <div className='center' style={{ marginTop: 10, marginBottom: 30 }}>
+        <div className='center' style={{ marginTop: 10 }}>
           <img src={require('../assets/pokemon.png')} className='logo' />
         </div>
-        <div className='wrap' >
+        <div className='center'>
+          <Link to={'/my-pokemon'} style={{ textDecoration: 'none', color: GlobalVar.secondaryColor }}>
+            <h3 className=''>My Pokemon</h3>
+          </Link>
+        </div>
+        <div className='container-grid' >
           {listPokemon.map((item, index) => <CardPokemon item={item} index={index} key={index} />)}
         </div>
         <div className='center' style={{ marginTop: 30, marginBottom: 30 }}>

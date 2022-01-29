@@ -5,28 +5,15 @@ export default function GlobalStyles() {
   return (
     <Global
       styles={css`
-      @media only screen 
-        and (min-device-width: 320px) 
-        and (max-device-width: 480px)
-        and (-webkit-min-device-pixel-ratio: 2) {
-          .card-container{
-            min-width:100%;
-            width:100%;
-            flex:1;
-            min-height:150px;
-          }
-          .container {
-            background-color: #FFEB99;
-            display:flex !important;
-            min-height:100vh;
-            padding:0 2rem;
-          }
-      }
       .container {
         background-color: #FFEB99;
         display:flex !important;
         min-height:100vh;
-        padding:0 4rem
+        width:100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // padding:0 4rem
       }
       .sticky{
         position:sticky;
@@ -200,6 +187,58 @@ export default function GlobalStyles() {
         padding: 0.2rem 0.7rem;
         font-weight:600;
         margin: 5px
+      }
+
+      .container-grid {
+        padding: 0;
+        margin: auto;
+        display: grid;
+        grid-template-columns: repeat(4,2fr);
+        margin: 5px 15px;
+        gap:20px;
+        position: relative;
+      }
+
+      .container-detail {
+        padding: 30px;
+        display: flex;
+        margin: 5px 15px;
+        gap:20px;
+      }
+
+      .card {
+        grid-column: span 4;
+      }
+
+      @media screen and (min-width: 320px) and (max-width: 549px) {
+        .container-grid {
+          grid-template-columns: repeat(1,1fr) !important;
+        }
+        .container-detail {
+          display: block !important;
+        }
+      }
+
+      @media screen and (min-width: 550px) and (max-width: 759px) {
+        .container-grid {
+          grid-template-columns: repeat(2,1fr) !important;
+        }
+        .container-detail {
+          display: block !important;
+        }
+      }
+
+
+      @media screen and (min-width: 760px) and (max-width: 959px) {
+        .container-grid {
+          grid-template-columns: repeat(3,1fr) !important;
+        }
+      }
+
+      @media screen and (min-width: 960px) {
+        .container-grid {
+          grid-template-columns: repeat(4,1fr) !important;
+        }
       }
     `}
     />
