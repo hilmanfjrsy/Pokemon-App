@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import CardPokemon from '../components/CardPokemon';
 import { ContextProvider } from '../context/BaseContext';
